@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clients>
+    <client>
+        <payed>оплачен</payed>
+        <name>Petr</name>
+        <secondname>Buslyuk</secondname>
+        <email>defiej@mail.ru</email>
+        <tel>91919191919</tel>
+        <datepayed>27/05/2015</datepayed>
+        <systempayed>WM</systempayed>
+        <numberofsystem>R120123113131</numberofsystem>
+        <mac>kkk</mac>
+    </client>
+    <client>
+        <payed>оплачен</payed>
+        <name>Petr</name>
+        <secondname>Grek</secondname>
+        <tel>91919191919</tel>
+        <email>wcdijwjc@yandex.ru</email>
+        <datepayed>19/03/2015</datepayed>
+        <systempayed>Yandex</systempayed>
+        <numberofsystem>341912041924</numberofsystem>
+        <mac>kkk</mac>
+    </client>
+    <client>
+        <payed>ожидает оплаты</payed>
+        <name>Цыля</name>
+        <secondname>Евреевна</secondname>
+        <tel>91919191919</tel>
+        <email>wcdijwjc@yandex.ru</email>
+        <datepayed>19/03/2015</datepayed>
+        <systempayed>Yandex</systempayed>
+        <numberofsystem>341912041924</numberofsystem>
+        <mac>kkk</mac>
+    </client>
+</clients>

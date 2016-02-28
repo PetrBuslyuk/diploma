@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<updates>
+<update>
+<version>1.0</version>
+<description>нет описания</description>
+<paths>
+<path>C:\\Users\\Петр\\Desktop\\предметы.txt</path>
+<path>C:\\Users\\Петр\\Desktop\\стратегия.txt</path>
+</paths>
+</update>
+<update>
+<version>1.1</version>
+<description>нет описания</description>
+<paths>
+<path>C:\\Users\\Петр\\Documents\\Database1.accdb</path>
+</paths>
+</update>
+</updates>

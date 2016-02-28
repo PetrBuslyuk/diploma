@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<companies>
+<company>
+	<name>MyCompany1</name>
+	<depo>100</depo>
+	<persent>1.5</persent>
+	<period>1</period>
+</company>
+</companies>
