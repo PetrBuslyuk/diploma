@@ -4,6 +4,46 @@
 	<name>MyCompany1</name>
 	<depo>100</depo>
 	<persent>1.5</persent>
-	<period>1</period>
+	<period>4</period>
+	<intervals>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>150</plus>
+	  <minus>150</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0	</plus>
+	  <minus>0100</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>01</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+</intervals>
+</company>
+<company>
+	<name>MyCompany2</name>
+	<depo>1000</depo>
+	<persent>3</persent>
+	<period>2</period>
+	<intervals>
+	<i>
+	  <plus>0	</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>80</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+</intervals>
 </company>
 </companies>

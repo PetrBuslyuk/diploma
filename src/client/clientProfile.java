@@ -9,8 +9,7 @@ public class clientProfile extends javax.swing.JFrame {
     private final client c;
     private  companies comp;
     private  File profile= new File(get_current_dir()+"profile.txt");
-    private String firstname,secondname,telephone,email,
-            systemofpay,numberofpay,dateofpay,mac;
+    private String firstname,secondname,telephone,email;
     String get_current_dir(){
         String path = clientProfile.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     	return path.substring(1,path.length());
