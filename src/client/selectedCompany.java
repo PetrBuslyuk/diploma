@@ -89,7 +89,9 @@ public class selectedCompany extends javax.swing.JFrame {
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
        c.getCalculateCompany();
     }//GEN-LAST:event_jButton3MouseClicked
-
+    double calculate(){
+       return c.getCalculateCompany();
+    }
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
        //Save company
        for(int i=0;i<sct.getRowCount();i++){

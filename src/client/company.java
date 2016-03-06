@@ -47,16 +47,17 @@ class company {
             .append("\t<persent>").append(persent).append("</persent>\n")
             .append("\t<period>").append(period).append("</period>\n")
             .append("\t<intervals>\n");
-               for(int i=0; i < Integer.parseInt(period);i++){
+            int period1 = Integer.parseInt(period);
+               for(int i=0; i < period1;i++){
                    str.append("\t<i>\n")
                            .append("\t  <plus>");
-                           str.append((!plus.get(i).equals(""))?plus.get(i):"0");
+                           str.append((plus.size()>i)?plus.get(i):"0");
                            str.append("</plus>\n");
                            str.append("\t  <minus>");
-                           str.append((!minus.get(i).equals(""))?minus.get(i):"0");
+                           str.append((minus.size()>i)?minus.get(i):"0");
                            str.append("</minus>\n");
                            str.append("\t  <reinvesting>");
-                           str.append(reinvesting.get(i));
+                           str.append((reinvesting.size()>i)?reinvesting.get(i):"false");
                            str.append("</reinvesting>\n");
                    str.append("\t</i>\n");
                }

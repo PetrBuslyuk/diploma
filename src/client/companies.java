@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,16 +34,20 @@ private final static String version = "1.0";
         menu = new javax.swing.JMenuBar();
         companies = new javax.swing.JMenu();
         select_all_companies = new javax.swing.JMenuItem();
+        calculate_selected = new javax.swing.JMenuItem();
         separator = new javax.swing.JPopupMenu.Separator();
-        save_companies_action = new javax.swing.JMenuItem();
         add_company = new javax.swing.JMenuItem();
         delete_company = new javax.swing.JMenuItem();
-        selectCompany = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         calculate = new javax.swing.JMenuItem();
+        edit_cname = new javax.swing.JMenuItem();
+        edit_cdepo = new javax.swing.JMenuItem();
+        edit_cpercent = new javax.swing.JMenuItem();
+        edit_cperiod = new javax.swing.JMenuItem();
         profile = new javax.swing.JMenu();
         programm = new javax.swing.JMenu();
         about_programm = new javax.swing.JMenuItem();
+        save_companies = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Компании");
@@ -90,16 +96,16 @@ private final static String version = "1.0";
             }
         });
         companies.add(select_all_companies);
-        companies.add(separator);
 
-        save_companies_action.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        save_companies_action.setText("Сохранить компании");
-        save_companies_action.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                save_companies_action(evt);
+        calculate_selected.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_MASK));
+        calculate_selected.setText("Расчитать выбранные");
+        calculate_selected.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                calculate_selectedMouseClicked(evt);
             }
         });
-        companies.add(save_companies_action);
+        companies.add(calculate_selected);
+        companies.add(separator);
 
         add_company.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         add_company.setText("Добавить компанию");
@@ -119,15 +125,6 @@ private final static String version = "1.0";
         });
         companies.add(delete_company);
 
-        selectCompany.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        selectCompany.setText("Выбрать компанию");
-        selectCompany.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                selectCompanyMouseClicked(evt);
-            }
-        });
-        companies.add(selectCompany);
-
         menu.add(companies);
 
         jMenu1.setText("Действия");
@@ -140,6 +137,42 @@ private final static String version = "1.0";
             }
         });
         jMenu1.add(calculate);
+
+        edit_cname.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.ALT_MASK));
+        edit_cname.setText("Редактировать название");
+        edit_cname.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edit_cnameActionPerformed(evt);
+            }
+        });
+        jMenu1.add(edit_cname);
+
+        edit_cdepo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.ALT_MASK));
+        edit_cdepo.setText("Редактировать депозит");
+        edit_cdepo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edit_cdepoActionPerformed(evt);
+            }
+        });
+        jMenu1.add(edit_cdepo);
+
+        edit_cpercent.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.ALT_MASK));
+        edit_cpercent.setText("Редактировать процент");
+        edit_cpercent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edit_cpercentActionPerformed(evt);
+            }
+        });
+        jMenu1.add(edit_cpercent);
+
+        edit_cperiod.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.ALT_MASK));
+        edit_cperiod.setText("Редактировать период инвестирования");
+        edit_cperiod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edit_cperiodActionPerformed(evt);
+            }
+        });
+        jMenu1.add(edit_cperiod);
 
         menu.add(jMenu1);
 
@@ -155,6 +188,7 @@ private final static String version = "1.0";
         programm.setText("Программа");
         programm.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
+        about_programm.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
         about_programm.setText("О программе");
         about_programm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,6 +198,14 @@ private final static String version = "1.0";
         programm.add(about_programm);
 
         menu.add(programm);
+
+        save_companies.setText("Сохранить");
+        save_companies.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                save_companies(evt);
+            }
+        });
+        menu.add(save_companies);
 
         setJMenuBar(menu);
 
@@ -200,23 +242,9 @@ private final static String version = "1.0";
     private void calculateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateActionPerformed
        if(ct.getSelectedRowCount()==0) JOptionPane.showMessageDialog(null, "Выберите компании");
        else{
-       String companies_table="";
-       double summary=0;double deposit=0;
-       int[] sr = ct.getSelectedRows();
-        for(int i=0;i<sr.length;i++){
-           companies_table +=ct.getValueAt(sr[i], 0).toString()+"\n";
-           deposit+=Double.parseDouble(ct.getValueAt(sr[i], 1).toString());
-           summary += Double.parseDouble(ct.getValueAt(sr[i], 1).toString())
-                   * (Double.parseDouble(ct.getValueAt(sr[i], 2).toString())/100)
-                   * Double.parseDouble(ct.getValueAt(sr[i], 3).toString());
-       }
-       double all=deposit+summary;
+       String [] cs = calculate_selected();
        JOptionPane.showMessageDialog(null, "Были выбраны следующие компании:\n"
-           +companies_table+"Перспективная прибыль составит: " + 
-               BigDecimal.valueOf(summary).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue()+
-               "\nПри первоначальном взносе:" + deposit +
-               "\nКонечная перспективная прибыль: "+
-               BigDecimal.valueOf(all).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
+           +cs[0]+BigDecimal.valueOf(Double.parseDouble(cs[1])).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
        }
     }//GEN-LAST:event_calculateActionPerformed
 
@@ -229,8 +257,8 @@ private final static String version = "1.0";
         company c = new company(name,depo,persent,period,
                new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
         companys.add(c);
-        model.addRow(c.get_company_to_object());
-        ct.setModel(model);
+        save_companies();
+        show_companies();
     }//GEN-LAST:event_add_companyActionPerformed
 
     private void delete_companyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_companyActionPerformed
@@ -241,58 +269,128 @@ private final static String version = "1.0";
     try {c1.close_main_window();} catch (IOException ex) {} 
     }//GEN-LAST:event_closeWindow
 
-    private void save_companies_action(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_companies_action
-        save_companies();
-    }//GEN-LAST:event_save_companies_action
-
     private void about_programmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_about_programmActionPerformed
         JOptionPane.showMessageDialog(null, "Программа для расчета перспективной"
             + " прибыли\n от инвестиционной деятельности.");
     }//GEN-LAST:event_about_programmActionPerformed
 
-    private void selectCompanyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectCompanyMouseClicked
-      showSelectedCompany();
-    }//GEN-LAST:event_selectCompanyMouseClicked
-
     private void ctMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ctMouseClicked
        if (evt.getClickCount() == 2) {
            sc.setVisible(true);
-           String selectedCName = ct.getValueAt(ct.getSelectedRow(), 0).toString();
-           companys.stream().forEach((company c)->{
-               if(c.get_name().equals(selectedCName)){
-                   sc.setSelectedCompany(c);
-               }
-           });
+           String s = ct.getValueAt(ct.getSelectedRow(), 0).toString();
+           showSelectedCompany(s);
         }
     }//GEN-LAST:event_ctMouseClicked
+
+    private void save_companies(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_save_companies
+         save_companies();
+    }//GEN-LAST:event_save_companies
+
+    private void calculate_selectedMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_calculate_selectedMouseClicked
+        
+    }//GEN-LAST:event_calculate_selectedMouseClicked
+
+    private void edit_cnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_cnameActionPerformed
+        switch (ct.getSelectedRowCount()) {
+            case 0:show("Выберите компанию"); break;
+            case 1:
+                String new_cname = input("Изменение названия комании","Введите новое название компании");
+                companys.get(ct.getSelectedRow()).set_name(new_cname);
+                show_companies();
+                save_companies();
+            break;
+            default:show("Выбрано больше 1 компании");break;
+        }
+    }//GEN-LAST:event_edit_cnameActionPerformed
+
+    private void edit_cdepoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_cdepoActionPerformed
+        switch (ct.getSelectedRowCount()) {
+            case 0:show("Выберите компанию"); break;
+            case 1:
+                String new_cdepo = input("Изменение депозита","Введите новый начальный депозит");
+                companys.get(ct.getSelectedRow()).set_depo(new_cdepo);
+                show_companies();
+                save_companies();
+            break;
+            default:show("Выбрано больше 1 компании");break;
+        }
+    }//GEN-LAST:event_edit_cdepoActionPerformed
+
+    private void edit_cpercentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_cpercentActionPerformed
+       switch (ct.getSelectedRowCount()) {
+            case 0:show("Выберите компанию"); break;
+            case 1:
+                String new_cpersent = input("Изменение процента","Введите средний процент");
+                companys.get(ct.getSelectedRow()).set_persent(new_cpersent);
+                save_companies();
+                try {
+                   get_companies();
+                } catch (ParserConfigurationException | SAXException | IOException ex) {
+                   log(ex);
+                }
+            break;
+            default:show("Выбрано больше 1 компании");break;
+        }
+    }//GEN-LAST:event_edit_cpercentActionPerformed
+
+    private void edit_cperiodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_cperiodActionPerformed
+        switch (ct.getSelectedRowCount()) {
+            case 0:show("Выберите компанию"); break;
+            case 1:
+                String new_cperiod = input("Изменение периода","Введите период инвестирования");
+                companys.get(ct.getSelectedRow()).set_period(new_cperiod);
+                show_companies();
+                save_companies();
+            break;
+            default:show("Выбрано больше 1 компании");break;
+        }
+    }//GEN-LAST:event_edit_cperiodActionPerformed
     
     static void log(Object o){
         System.out.println(o);
     }
     
+    static String input(String title, String massage){
+        return JOptionPane.showInputDialog(null, massage, title);
+    }
+    static void show(String massage){
+         JOptionPane.showMessageDialog(null, massage);
+    }
+    String [] calculate_selected(){
+        int[] sr = ct.getSelectedRows();
+        String companies_table="";
+        double depo=0;
+        for(int i=0;i<sr.length;i++){
+           String ct_new =ct.getValueAt(sr[i], 0).toString();
+           showSelectedCompany(ct_new);
+           depo += sc.calculate();
+           companies_table += ct_new+"\n";
+        }
+        return new String [] {companies_table,Double.toString(depo)};
+    }
     protected static void deleteCompanies(){
-    if(ct.getSelectedRowCount()>0){
+        if(ct.getSelectedRowCount()>0){
             DefaultTableModel model = (DefaultTableModel)ct.getModel();
             int[] row = ct.getSelectedRows();
             for(int row1 : row){
                 companys.remove(row1);
-                model.removeRow(row1);
             }
-            ct.setModel(model);
+            save_companies();
+            show_companies();
         }
     }
     protected static String get_current_dir(){
         String path = companies.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     	return path.substring(1,path.length());
-     }
+    }
+    
     private static void get_companies() throws ParserConfigurationException, SAXException, IOException{
         Node doc = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder().parse(file);
-        
+        companys = new ArrayList<>();
         String name,depo,persent,period;
         ArrayList<String> plus,minus,reinvesting;
         Node n = doc.getFirstChild();
-        System.out.println("1");
         if(n.getNodeName().equals("companies")){
             while(n!=null){
             Node m = n.getFirstChild();
@@ -347,6 +445,7 @@ private final static String version = "1.0";
         }
         show_companies();
     }
+    
     static void save_companies(){
        StringBuilder str = new StringBuilder();
        str.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
@@ -365,6 +464,7 @@ private final static String version = "1.0";
         save_companies();
     }
     protected static void show_companies(){
+        ((DefaultTableModel)ct.getModel()).setNumRows(0);
         for(int i=0;i<companys.size();i++){
             System.out.println(companys.get(i).get_name());
             ((DefaultTableModel)ct.getModel()).addRow(
@@ -374,8 +474,12 @@ private final static String version = "1.0";
                     companys.get(i).get_period()
             });}
     }    
-    void showSelectedCompany(){
-        System.out.println(ct.getSelectedRow());
+    void showSelectedCompany(String selectedCName){
+           companys.stream().forEach((company c)->{
+               if(c.get_name().equals(selectedCName)){
+                   sc.setSelectedCompany(c);
+               }
+           });
     }
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> {
@@ -383,7 +487,6 @@ private final static String version = "1.0";
                 comp = new companies();
                 comp.setVisible(true);
             } catch (Exception ex) {
-                log("fer");
                 log(ex); 
             }
         });
@@ -403,16 +506,20 @@ private final static String version = "1.0";
     private javax.swing.JMenuItem about_programm;
     private javax.swing.JMenuItem add_company;
     private javax.swing.JMenuItem calculate;
+    private javax.swing.JMenuItem calculate_selected;
     private javax.swing.JMenu companies;
     private static javax.swing.JTable ct;
     private javax.swing.JMenuItem delete_company;
+    private javax.swing.JMenuItem edit_cdepo;
+    private javax.swing.JMenuItem edit_cname;
+    private javax.swing.JMenuItem edit_cpercent;
+    private javax.swing.JMenuItem edit_cperiod;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar menu;
     private javax.swing.JMenu profile;
     private javax.swing.JMenu programm;
-    private static javax.swing.JMenuItem save_companies_action;
-    private javax.swing.JMenuItem selectCompany;
+    private javax.swing.JMenu save_companies;
     private javax.swing.JMenuItem select_all_companies;
     private javax.swing.JPopupMenu.Separator separator;
     // End of variables declaration//GEN-END:variables
