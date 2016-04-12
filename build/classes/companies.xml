@@ -9,7 +9,7 @@
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>false</reinvesting>
+	  <reinvesting>true</reinvesting>
 	</i>
 	<i>
 	  <plus>80</plus>
@@ -28,6 +28,74 @@
 	  <plus>0</plus>
 	  <minus>0</minus>
 	  <reinvesting>false</reinvesting>
+	</i>
+</intervals>
+</company>
+<company>
+	<name>Forex</name>
+	<depo>100</depo>
+	<persent>25</persent>
+	<period>12</period>
+	<intervals>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
 	</i>
 </intervals>
 </company>

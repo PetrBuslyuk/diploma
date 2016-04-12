@@ -129,7 +129,7 @@ public class serverForm extends javax.swing.JFrame {
                 s.setVisible(true);
                 serv = new server(port, s);
                 try{
-                    //new emailSending();
+                    emailSending emailSending = new emailSending();
                     db = new database();
                     lu=new listOfUsers(db);
                     serv.set_list_user(lu);

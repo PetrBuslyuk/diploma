@@ -1,43 +1,52 @@
 package client;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 class company {
     private String name,depo,persent,period;
-    private ArrayList<String>  plus, minus, reinvesting;
-    public company(String name,String depo, String persent, String period,
-            ArrayList<String> plus,ArrayList<String> minus,ArrayList<String> reinvesting) {
-           this.name=name;this.depo=depo;this.period=period;this.persent=persent;
-        this.plus = plus;
-        this.minus = minus;
-        this.reinvesting = reinvesting;
+    private final ArrayList<String>  plus, minus, reinvesting;
+    private final ArrayList<Double> depofirst, depolast, resultbuffer;
+         
+    public company(String _name,String _depo, String _persent, String _period,
+            ArrayList<String> _plus,ArrayList<String> _minus,ArrayList<String> _reinvesting) {
+        name=_name;depo=_depo;period=_period;persent=_persent;
+        plus = _plus;
+        minus = _minus;
+        reinvesting = _reinvesting;
+        depofirst = new ArrayList<>();
+        depolast = new ArrayList<>();
+        resultbuffer = new ArrayList<>();
     }
 
-    company() {this.name=this.depo=this.period=this.persent="";
-        this.plus = new ArrayList<>();
-        this.minus = new ArrayList<>();
-        this.reinvesting = new ArrayList<>();  
-    }
-    protected void set_name(String name){this.name=name;}
-    protected void set_depo(String depo){this.depo=depo;}
-    protected void set_persent(String persent){this.persent=persent;}
-    protected void set_period(String period){this.period=period;}
-    protected void set_plus(String plus){this.plus.add(plus);}
-    protected void set_minus(String minus){this.minus.add(minus);}
-    protected void set_reinvesting(String reinvesting){this.reinvesting.add(reinvesting);}
-    protected void set_plus(int i,String plus){this.plus.set(i,plus);}
-    protected void set_minus(int i,String minus){this.minus.set(i,minus);}
-    protected void set_reinvesting(int i,String reinvesting){this.reinvesting.set(i,reinvesting);}
-    protected String get_name(){return this.name;}
-    protected String get_persent(){return this.persent;}
-    protected String get_period(){return this.period;}
-    protected String get_depo(){return this.depo;}
-    protected String get_plus(int i){return this.plus.get(i);}
-    protected String get_minus(int i){return this.minus.get(i);}
-    protected boolean get_reinvesting(int i){return Boolean.parseBoolean(this.reinvesting.get(i));}
-    protected ArrayList get_plus(){return this.plus;}
-    protected ArrayList get_minus(){return this.minus;}
-    protected ArrayList get_reinvesting(){return this.reinvesting;}
+    protected void set_name(String _name){name=_name;}
+    protected void set_depo(String _depo){depo=_depo;}
+    protected void set_persent(String _persent){persent=_persent;}
+    protected void set_period(String _period){period=_period;}
+    protected void set_plus(String _plus){plus.add(_plus);}
+    protected void set_minus(String _minus){minus.add(_minus);}
+    protected void set_reinvesting(String _reinvesting){reinvesting.add(_reinvesting);}
+    protected void set_plus(int i,String _plus){plus.set(i,_plus);}
+    protected void set_minus(int i,String _minus){minus.set(i,_minus);}
+    protected void set_reinvesting(int i,String _reinvesting){reinvesting.set(i,_reinvesting);}
+    protected void set_depofirst(int i,double df){depofirst.set(i,df);}
+    protected void set_depolast(int i,double dl){depolast.set(i,dl);}
+    protected void set_resultbuffer(int i,double rb){resultbuffer.set(i,rb);}
+    protected ArrayList get_depolast(){return depolast;}
+    protected double get_depolast(int i){return depolast.get(i);}
+    protected double get_depofirst(int i){return depofirst.get(i);}
+    protected double get_resultbuffer(int i){return resultbuffer.get(i);}
+    protected ArrayList get_depofirst(){return depofirst;}
+    protected String get_name(){return name;}
+    protected String get_persent(){return persent;}
+    protected String get_period(){return period;}
+    protected String get_depo(){return depo;}
+    protected String get_plus(int i){return plus.get(i);}
+    protected String get_minus(int i){return minus.get(i);}
+    protected boolean get_reinvesting(int i){return Boolean.parseBoolean(reinvesting.get(i));}
+    protected ArrayList get_plus(){return plus;}
+    protected ArrayList get_minus(){return minus;}
+    protected ArrayList get_reinvesting(){return reinvesting;}
     protected String get_company_to_string(){
         log("here");
         StringBuilder str = new StringBuilder();
@@ -66,32 +75,53 @@ class company {
         return str.toString();
     }
      protected Object [] get_company_to_object(){
-         return new Object[]{this.name,this.depo,this.persent,this.period};
+         return new Object[]{name,depo,persent,period};
      }
-     
-     double getCalculateCompany(){
-        double depo1 = Double.parseDouble(this.get_depo());
-        double persent1 = Double.parseDouble(this.get_persent());
-        int period1 = Integer.parseInt(this.get_period());
-        ArrayList<String> plus1 = this.get_plus();
-        ArrayList<String> minus1 = this.get_minus();
-        ArrayList<String> reinvesting1 = this.get_reinvesting();
-        ArrayList<Double> a =new ArrayList<>();
+     protected String [] get_company_to_array_in_report(){
+         int size = Integer.parseInt(get_period()) * 6;
+         String [] result = new String[size];
+         int i = 0,a = 0;
+         while(i!=size){
+             result[i]=Integer.toString(a);++i;
+             result[i]=get_plus(a);++i;
+             result[i]=get_minus(a);++i;
+             result[i]=Boolean.toString(get_reinvesting(a));++i;
+             result[i]=Double.toString(get_depofirst(a));++i;
+             result[i]=Double.toString(get_depolast(a));++i;
+             ++a;
+         }
+         return result;
+     }
+     company getCalculateCompany(){
+        double depo1 = Double.parseDouble(get_depo());
+        double persent1 = Double.parseDouble(get_persent());
+        int period1 = Integer.parseInt(get_period());
+        ArrayList<String> plus1 = get_plus();
+        ArrayList<String> minus1 = get_minus();
+        ArrayList<String> reinvesting1 = get_reinvesting();
         double  plus2,minus2;
+        depofirst.clear();
+        depolast.clear();
+        resultbuffer.clear();
+        for(int i=0;i<period1;i++){
+            depofirst.add(0.0);
+            depolast.add(0.0);
+            resultbuffer.add(0.0);
+        }
         for(int i=0;i<period1;i++){
             plus2 = (plus1.get(i).equals(""))? 0: Double.parseDouble(plus1.get(i));
             minus2 = (minus1.get(i).equals(""))? 0:Double.parseDouble(minus1.get(i));
             if(Boolean.parseBoolean(reinvesting1.get(i))){
-                depo1 += depo1*(persent1/100)+ plus2 - minus2;
+                set_depofirst(i,(i==0)?depo1:BigDecimal.valueOf(get_depolast(i-1)+ plus2).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
+                set_resultbuffer(i,get_depofirst(i)*(persent1/100) - minus2);
+                set_depolast(i,BigDecimal.valueOf(get_resultbuffer(i)+get_depofirst(i)).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
             }else{
-                a.add(depo1*(persent1/100)+plus2-minus2);
+                set_depofirst(i,(i==0)?depo1:BigDecimal.valueOf(get_depofirst(i-1)+ plus2).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
+                set_resultbuffer(i,get_depofirst(i)*(persent1/100) - minus2);
+                set_depolast(i,BigDecimal.valueOf(get_resultbuffer(i)+get_depofirst(i)+((i==0)?0:get_resultbuffer(i-1))).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
             }
         }
-        for (int i=0;i<a.size();i++){
-            depo1 += a.get(i);
-        }
-        log(depo1);
-        return depo1;
+        return this;
      }
      
      static void log(Object o){

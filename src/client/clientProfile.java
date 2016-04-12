@@ -1,36 +1,55 @@
 package client;
 
 import java.io.*;
+import java.util.Timer;
+import java.util.TimerTask;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class clientProfile extends javax.swing.JFrame {
     private boolean connected;
-    private final client c;
+    private  client c;
     private  companies comp;
-    private  File profile= new File(get_current_dir()+"profile.txt");
+    private  File profile= new File(companies.get_current_dir()+"profile.txt");
     private String firstname,secondname,telephone,email;
-    String get_current_dir(){
-        String path = clientProfile.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-    	return path.substring(1,path.length());
-    }
-    public clientProfile() throws Exception {
+    private boolean sendedOurData=false;
+    Timer timer;
+   
+    public clientProfile() {
         super("ClientProfile");
-        initComponents();
-        System.out.println("5");
-        if(profile.exists()){
-            BufferedReader in = new BufferedReader(new FileReader(profile));
-            String [] mas = in.readLine().split(";");
-            fn.setText(mas[0]);
-            sn.setText(mas[1]);
-            tn.setText(mas[2]);
-            em.setText(mas[3]);
-            fill_client_all(mas[0], mas[1], mas[2], mas[3]);
-        } else  check_and_send();
-        System.out.println("6");
-        c = new client("localhost", 7777, this);
-        //c.set_comp(comp);
-        c.start();
+        try {
+            initComponents();
+            if(profile.exists()){
+                BufferedReader in = null;
+                try {
+                    in = new BufferedReader(new FileReader(profile));
+                    String [] mas = in.readLine().split(";");
+                    fn.setText(mas[0]);
+                    sn.setText(mas[1]);
+                    tn.setText(mas[2]);
+                    em.setText(mas[3]);
+                    fill_client_all(mas[0], mas[1], mas[2], mas[3]);
+                } catch (FileNotFoundException ex) {} catch (IOException ex) {} catch (Exception ex) {} finally {
+                    try { in.close(); } catch (IOException ex) {}
+                }
+            } else  check_and_send();
+            c = new client("localhost", 7777, this);
+            sendedOurData = c.start();
+            timer = new Timer();
+            timer.schedule( new TimerTask(){
+                public void run(){
+                    if(client.socket!=null){
+                        if(!sendedOurData && client.check_connect()){
+                            try {
+                            sendedOurData =  c.start();
+                            } catch (Exception ex) {}
+                        }
+                    }else{
+                        sendedOurData = false;
+                    }
+                }
+            }, 0L ,10000L);
+        } catch (Exception ex) {}
     }
     protected void fill_client_all(String firstname,String secondname,
             String telephone,String email) throws Exception{

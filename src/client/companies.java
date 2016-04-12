@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,8 +16,8 @@ private static clientProfile c1;
 private static ArrayList<company> companys=new ArrayList<>();
 private static File file= new File(get_current_dir()+"companies.xml");
 private final static String version = "1.0";
-    private static companies comp;
-   private static selectedCompany sc;
+private static companies comp;
+private static selectedCompany sc;
 
     public companies(){
         initComponents(); 
@@ -33,6 +31,7 @@ private final static String version = "1.0";
         ct = new javax.swing.JTable();
         menu = new javax.swing.JMenuBar();
         companies = new javax.swing.JMenu();
+        generate_report_to_all = new javax.swing.JMenuItem();
         select_all_companies = new javax.swing.JMenuItem();
         calculate_selected = new javax.swing.JMenuItem();
         separator = new javax.swing.JPopupMenu.Separator();
@@ -87,6 +86,15 @@ private final static String version = "1.0";
 
         companies.setText("Компании");
         companies.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+
+        generate_report_to_all.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        generate_report_to_all.setText("Сформировать отчет");
+        generate_report_to_all.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generate_report_to_allActionPerformed(evt);
+            }
+        });
+        companies.add(generate_report_to_all);
 
         select_all_companies.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
         select_all_companies.setText("Выбрать все компании");
@@ -242,7 +250,8 @@ private final static String version = "1.0";
     private void calculateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateActionPerformed
        if(ct.getSelectedRowCount()==0) JOptionPane.showMessageDialog(null, "Выберите компании");
        else{
-       String [] cs = calculate_selected();
+       int[] sr = ct.getSelectedRows();
+       String [] cs = calculate_selected(sr);
        JOptionPane.showMessageDialog(null, "Были выбраны следующие компании:\n"
            +cs[0]+BigDecimal.valueOf(Double.parseDouble(cs[1])).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
        }
@@ -287,7 +296,8 @@ private final static String version = "1.0";
     }//GEN-LAST:event_save_companies
 
     private void calculate_selectedMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_calculate_selectedMouseClicked
-        
+        int[] sr = ct.getSelectedRows();
+        calculate_selected(sr);
     }//GEN-LAST:event_calculate_selectedMouseClicked
 
     private void edit_cnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_cnameActionPerformed
@@ -345,6 +355,23 @@ private final static String version = "1.0";
             default:show("Выбрано больше 1 компании");break;
         }
     }//GEN-LAST:event_edit_cperiodActionPerformed
+
+    private void generate_report_to_allActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generate_report_to_allActionPerformed
+        int[] sr = ct.getSelectedRows();
+        if(sr.length==0){
+            show("Вы не выбрали компаний");
+        }else{
+            ArrayList<company> CompanyList = new ArrayList<>();
+            for(int i=0;i<sr.length;i++){
+               String company_name = ct.getValueAt(sr[i], 0).toString();
+               companys.stream().filter((Company) -> (Company.get_name().equals(company_name))).forEach((Company) -> {
+                   CompanyList.add(Company);
+                });
+            }
+            createPDFReport.createReport(true, CompanyList, null);
+            CompanyList.clear();
+        }
+    }//GEN-LAST:event_generate_report_to_allActionPerformed
     
     static void log(Object o){
         System.out.println(o);
@@ -356,14 +383,14 @@ private final static String version = "1.0";
     static void show(String massage){
          JOptionPane.showMessageDialog(null, massage);
     }
-    String [] calculate_selected(){
-        int[] sr = ct.getSelectedRows();
+    static String [] calculate_selected(int[] sr){
         String companies_table="";
         double depo=0;
         for(int i=0;i<sr.length;i++){
+           int period = Integer.parseInt(ct.getValueAt(sr[i], 3).toString());
            String ct_new =ct.getValueAt(sr[i], 0).toString();
            showSelectedCompany(ct_new);
-           depo += sc.calculate();
+           depo += sc.calculate().get_depolast(period-1);
            companies_table += ct_new+"\n";
         }
         return new String [] {companies_table,Double.toString(depo)};
@@ -383,7 +410,6 @@ private final static String version = "1.0";
         String path = companies.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     	return path.substring(1,path.length());
     }
-    
     private static void get_companies() throws ParserConfigurationException, SAXException, IOException{
         Node doc = DocumentBuilderFactory.newInstance()
             .newDocumentBuilder().parse(file);
@@ -445,7 +471,6 @@ private final static String version = "1.0";
         }
         show_companies();
     }
-    
     static void save_companies(){
        StringBuilder str = new StringBuilder();
        str.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
@@ -466,7 +491,6 @@ private final static String version = "1.0";
     protected static void show_companies(){
         ((DefaultTableModel)ct.getModel()).setNumRows(0);
         for(int i=0;i<companys.size();i++){
-            System.out.println(companys.get(i).get_name());
             ((DefaultTableModel)ct.getModel()).addRow(
                 new Object[]{companys.get(i).get_name(), 
                     companys.get(i).get_depo(),
@@ -474,7 +498,7 @@ private final static String version = "1.0";
                     companys.get(i).get_period()
             });}
     }    
-    void showSelectedCompany(String selectedCName){
+    static void showSelectedCompany(String selectedCName){
            companys.stream().forEach((company c)->{
                if(c.get_name().equals(selectedCName)){
                    sc.setSelectedCompany(c);
@@ -491,15 +515,16 @@ private final static String version = "1.0";
             }
         });
         try{
-        sc = new selectedCompany();
-        sc.setVisible(false);
-        c1 = new clientProfile();
-        c1.set_comp(comp);
-        c1.setVisible(false);
-        get_companies();
-        }catch(Exception ex){
-            log(ex);
-        }
+            sc = new selectedCompany();
+            sc.setVisible(false);
+            c1 = new clientProfile();
+            c1.set_comp(comp);
+            c1.setVisible(false);
+            get_companies();
+            int [] i=new int[companys.size()];int a=0;
+            for(company c:companys){i[a]=a++;}
+            calculate_selected(i);
+        }catch(Exception ex){log(ex);}
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -514,6 +539,7 @@ private final static String version = "1.0";
     private javax.swing.JMenuItem edit_cname;
     private javax.swing.JMenuItem edit_cpercent;
     private javax.swing.JMenuItem edit_cperiod;
+    private javax.swing.JMenuItem generate_report_to_all;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JMenuBar menu;

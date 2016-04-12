@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,7 +36,6 @@ private final database db;
     }
     protected boolean check_user_in_list(String email){
         for(int i=0;i<buf_u.size();i++){
-           System.out.println("14");
             if(buf_u.get(i).get_email().equals(email)){
                 System.out.println("15");
               if(buf_u.get(i).get_online()) return false;
@@ -51,7 +51,6 @@ private final database db;
         DefaultTableModel dtm = (DefaultTableModel) table.getModel();
         dtm.setRowCount(0);
     }
-    
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -72,7 +71,7 @@ private final database db;
         ));
         jScrollPane1.setViewportView(tcl);
 
-        choiseMade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Нет действий", "Обновить список", "Выслать ключ", "Сохранить", "Выделить всех" }));
+        choiseMade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Нет действий", "Обновить список", "Выслать сообщение", "Сохранить", "Выделить всех" }));
         choiseMade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 choiseMadeActionPerformed(evt);
@@ -108,17 +107,28 @@ private final database db;
     }// </editor-fold>//GEN-END:initComponents
 
     private void madeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_madeActionPerformed
-        
         switch(choiseMade.getSelectedItem().toString()){
             case "Обновить список":{
                 refresh_list();
             };break;
-            case "Выслать ключ":{}; break;
+            case "Выслать сообщение":{
+                int [] selectedUsers = tcl.getSelectedRows();
+                if(selectedUsers.length == 0 ){
+                    JOptionPane.showMessageDialog(rootPane,"Вы не выбрали клиентов для отправки сообщения");
+                }else{
+                    String subject = JOptionPane.showInputDialog("Введите заголовок");
+                    String message = JOptionPane.showInputDialog("Введите сообщение");
+                    emailSending sending = new emailSending();
+                    for(int i : selectedUsers){
+                       sending.sendEmail(tcl.getValueAt(i, 4).toString(), "skyliner270594@gmail.com", "Petr Bulsyuk", subject, message);
+                    }
+                    JOptionPane.showMessageDialog(rootPane,"Сообщения успешно отправлены");
+                }
+            }; break;
             case "Сохранить":{};break;
             case "Выделить всех":{};break;         
             default:break;
         }
-        
     }//GEN-LAST:event_madeActionPerformed
 
     private void choiseMadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_choiseMadeActionPerformed

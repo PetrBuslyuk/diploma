@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class client{
     public static Socket socket;
     private static clientProfile cg;
@@ -13,6 +14,7 @@ public class client{
     protected final static int LOGIN=0,QUIT=1;
     private final int port;
     private static boolean access=true;
+    
         
     client(String server,int port,clientProfile cg){
         this.server = server;
@@ -25,24 +27,25 @@ public class client{
     private void display(String msg) {cg.append(msg + "\n");}
     
 //Client-server arc
-    public boolean start() throws IOException, ClassNotFoundException, Exception {
-        // try to connect to the server
-        try {socket = new Socket(server, port);}
-        catch(Exception ec) {return false;}
-        om = new ObjectMessenger(socket);
-       
-        // creates the Thread to listen from the server 
-        new ListenFromServer().start();
-        try{ //send username data
-            if(check_connect()){
-                System.out.println("7");
-                om.sendObject(LOGIN,cg.get_firstname()+";"+cg.get_secondname()+";"
-                +cg.get_telephone()+";"+cg.get_email()); 
-            }else{
-                disconnect();return false;
-            }
-        }catch (IOException eIO) {}
-        return true;
+    public boolean start(){
+        try {
+            // try to connect to the server
+            try {socket = new Socket(server, port);}
+            catch(Exception ec) {return false;}
+            om = new ObjectMessenger(socket);
+            
+            // creates the Thread to listen from the server
+            new ListenFromServer().start();
+            //send username data
+                if(check_connect()){
+                    om.sendObject(LOGIN,cg.get_firstname()+";"+cg.get_secondname()+";"
+                            +cg.get_telephone()+";"+cg.get_email());
+                }else{
+                    disconnect();return false;
+                }
+        }
+        catch(IOException ex) {}
+        return true; 
     }
     protected static boolean check_connect(){return socket.isConnected();}
     protected void close_main_window(){
@@ -53,7 +56,7 @@ public class client{
         }
         System.exit(0);
     }
-
+    
     public static class ObjectMessenger{
         protected static Socket socket;
         protected ObjectOutputStream oos;
@@ -88,7 +91,7 @@ public class client{
         if(socket != null) socket.close();
         cg.connectionFailed();
     }
-    class ListenFromServer extends Thread {
+    public class ListenFromServer extends Thread {
         @Override
         public void run(){
             while(true){
