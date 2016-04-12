@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -19,11 +21,15 @@ private final database db;
         getAllUsers();
         refresh_list();
     }
-   
+    protected void set_online(String email, boolean flag){
+        buf_u.stream().filter((u) -> (email.equals(u.get_email()))).forEach((u) -> {
+            u.set_online(flag);
+        });
+    }
     final void getAllUsers() throws SQLException{
         ResultSet rs = db.getAllUsers();
         while(rs.next()){
-            user c = new user(false,rs.getString("payed"), rs.getString("name"),
+            user c = new user(false, rs.getString("name"),
             rs.getString("secondname"),rs.getString("tel"),rs.getString("email"));
             buf_u.add(c);
         }
@@ -37,15 +43,10 @@ private final database db;
     protected boolean check_user_in_list(String email){
         for(int i=0;i<buf_u.size();i++){
             if(buf_u.get(i).get_email().equals(email)){
-                System.out.println("15");
-              if(buf_u.get(i).get_online()) return false;
-            buf_u.get(i).set_online(true);
-            buf_u.get(i).set_item_number(i);
-            break;
+              return true;
             }
         }
-        System.out.println("12");
-        return true;
+        return false;
     }
     protected void clear_table(JTable table){
         DefaultTableModel dtm = (DefaultTableModel) table.getModel();
@@ -135,11 +136,18 @@ private final database db;
         // TODO add your handling code here:
     }//GEN-LAST:event_choiseMadeActionPerformed
 
+    void add_new_user(user u){
+        try {
+            db.insertUser(u);
+        } catch (SQLException ex) {
+            Logger.getLogger(listOfUsers.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> choiseMade;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton made;
     private javax.swing.JTable tcl;
     // End of variables declaration//GEN-END:variables
-
 }

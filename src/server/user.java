@@ -4,7 +4,7 @@ public class user {
 private String name,secondname,tel,email;
 private boolean online;
 protected int item_number;
-    user(boolean online,String payed, String name, String secondname, String tel, String email) {
+    user(boolean online,String name, String secondname, String tel, String email) {
         this.online = online;this.name = name;
         this.secondname = secondname;this.tel = tel;this.email = email;
     }
@@ -20,8 +20,8 @@ protected int item_number;
     protected String get_name() {return this.name;}
     protected String get_secondname() {return this.secondname;}    
     protected String get_email(){return this.email;}
+    protected String get_telephone(){return this.tel;}
     protected boolean get_online() {return this.online;}
-    protected void set_item_number(int item_number){this.item_number=item_number;}
     protected void set_name(String name){this.name=name;}
     protected void set_secondname(String s){secondname=s;}
     protected void set_login(String username,String secondname,

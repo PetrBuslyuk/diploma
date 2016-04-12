@@ -1,13 +1,11 @@
 package server;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
-import static server.emailSending.sendEmail;
 
 public class serverForm extends javax.swing.JFrame {
     private server s;
@@ -110,6 +108,7 @@ public class serverForm extends javax.swing.JFrame {
 
     private void clientListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientListActionPerformed
         lu.setVisible(true);
+        lu.refresh_list();
     }//GEN-LAST:event_clientListActionPerformed
 
     private void administrationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_administrationActionPerformed
@@ -124,12 +123,12 @@ public class serverForm extends javax.swing.JFrame {
     }
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 serverForm s = new serverForm();
                 s.setVisible(true);
                 serv = new server(port, s);
                 try{
-                    emailSending emailSending = new emailSending();
                     db = new database();
                     lu=new listOfUsers(db);
                     serv.set_list_user(lu);

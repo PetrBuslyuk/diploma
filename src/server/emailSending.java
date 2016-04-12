@@ -37,7 +37,7 @@ public class emailSending {
             Transport.send(msg);
         } catch (AddressException ex) {
             Logger.getLogger(emailSending.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MessagingException | UnsupportedEncodingException ex) {
+        } catch (MessagingException | UnsupportedEncodingException ex){
             Logger.getLogger(emailSending.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

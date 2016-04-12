@@ -33,9 +33,20 @@ public class database {
         Statement stmt = conn.createStatement();
         return stmt.executeQuery("Select * from users where tel='"+tel+"';");
     }
-    void insertUser(user u) throws SQLException{
-        //TODO
-        Statement stmt = conn.createStatement();
-        //return stmt.executeQuery("Select * from users where tel='"++"';");
+    
+    protected void insertUser(user u) throws SQLException{
+        int i = 0;ResultSet rows = getUserByImail(u.get_email());
+        while(rows.next()){++i;}
+        if(i == 0){
+            String prstmt= "INSERT INTO users (name,secondname,tel,email) "
+                    + "VALUES(?,?,?,?);";
+            PreparedStatement stmt = conn.prepareStatement(prstmt);
+            stmt.setString(1, u.get_name());
+            stmt.setString(2, u.get_secondname());
+            stmt.setString(3, u.get_telephone());
+            stmt.setString(4, u.get_email());
+            stmt.executeUpdate();
+            stmt.close();
+        }        
     }
 }

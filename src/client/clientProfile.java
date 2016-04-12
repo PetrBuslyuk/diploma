@@ -3,6 +3,8 @@ package client;
 import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
@@ -14,6 +16,7 @@ public class clientProfile extends javax.swing.JFrame {
     private String firstname,secondname,telephone,email;
     private boolean sendedOurData=false;
     Timer timer;
+    Timer timer1;
    
     public clientProfile() {
         super("ClientProfile");
@@ -34,21 +37,29 @@ public class clientProfile extends javax.swing.JFrame {
                 }
             } else  check_and_send();
             c = new client("localhost", 7777, this);
-            sendedOurData = c.start();
-            timer = new Timer();
-            timer.schedule( new TimerTask(){
+            timer1 = new Timer();
+            timer1.schedule(new TimerTask(){
                 public void run(){
-                    if(client.socket!=null){
-                        if(!sendedOurData && client.check_connect()){
-                            try {
-                            sendedOurData =  c.start();
-                            } catch (Exception ex) {}
-                        }
-                    }else{
-                        sendedOurData = false;
+                   if(firstname.equals("firstname") || secondname.equals("secondname") || 
+                        telephone.equals("01234567") || email.equals("example@mail.ru")){
+                        companies.show("Заполните профиль! После этого нажмите кнопку \"Сохранить\".");
                     }
                 }
-            }, 0L ,10000L);
+            },0L, 10000L);
+            timer = new Timer();
+            c.start();
+            timer.schedule( new TimerTask(){
+                public void run(){
+                    if(c.socket==null){
+                       c.start();
+                    }
+                    if(!c.sendedOurData && c.socket!=null){
+                        try{
+                            c.sendData();
+                        } catch (Exception ex) {companies.log(ex);} 
+                    }
+                }
+            }, 0L ,1000L);
         } catch (Exception ex) {}
     }
     protected void fill_client_all(String firstname,String secondname,
@@ -114,13 +125,21 @@ public class clientProfile extends javax.swing.JFrame {
             }
         });
 
+        fn.setText("firstname");
+
+        sn.setText("secondname");
+
         jLabel1.setText("Имя");
 
         jLabel2.setText("Фамилия");
 
         jLabel4.setText("Телефон");
 
+        tn.setText("01234567");
+
         jLabel7.setText("Е-мейл");
+
+        em.setText("example@mail.ru");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -176,8 +195,13 @@ public class clientProfile extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void save_clientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_clientActionPerformed
-        check_and_send();
-        this.setVisible(false);
+        try {
+            check_and_send();
+            fill_client_all(fn.getText(), sn.getText(), tn.getText(), em.getText());
+            this.setVisible(false);
+        } catch (Exception ex) {
+            Logger.getLogger(clientProfile.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_save_clientActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

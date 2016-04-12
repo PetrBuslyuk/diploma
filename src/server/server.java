@@ -53,14 +53,17 @@ public class server {
                 System.out.println("9");
                 ct.set_login(mes[1],mes[2],mes[3],mes[4]); //имя,фамилия,телефон,email,mac
                 if(lu.check_user_in_list(ct.get_email())){
-                sendObject(ACCESS+";"+true);
-                display("Клиент "+ct.get_name()+" "+ct.get_secondname()+" подключился.");
+                    sendObject(ACCESS+";"+true);
+                    display("Клиент "+ct.get_name()+" "+ct.get_secondname()+" подключился.");
+                    lu.set_online(ct.get_email(),true);
                 }else{
-                sendObject(ACCESS+";"+false);
-                //ct.close();
-                display("Клиент "+ct.get_name()+" "+ct.get_secondname()+" не получил доступа.");}
+                    //sendObject(ACCESS+";"+false);
+                    //ct.close();
+                    display("Новый клиент "+ct.get_name()+" "+ct.get_secondname()+" добавился.");}
+                    lu.add_new_user(ct.get_user());
             };break;
             case QUIT:{
+                lu.set_online(ct.get_email(),false);
                 display("Клиент "+ct.get_name()+" "+ct.get_secondname()+" отключился.");
                 ct.close();
             };break;
@@ -153,6 +156,7 @@ public class server {
         }
         String get_name(){return user.get_name();}
         String get_secondname(){return user.get_secondname();}
+        String get_telephone(){return user.get_telephone();}
         String get_email(){return user.get_email();}
         // try to close everything
         private void close() throws IOException {
@@ -161,6 +165,9 @@ public class server {
         private void set_login(String username,String secondname,
         String telephone,String email) {
             user.set_login(username,secondname,telephone,email);
+        }
+        protected user get_user(){
+            return user;
         }
     }
 }

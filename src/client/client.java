@@ -14,7 +14,7 @@ public class client{
     protected final static int LOGIN=0,QUIT=1;
     private final int port;
     private static boolean access=true;
-    
+    static boolean sendedOurData=false;
         
     client(String server,int port,clientProfile cg){
         this.server = server;
@@ -33,19 +33,27 @@ public class client{
             try {socket = new Socket(server, port);}
             catch(Exception ec) {return false;}
             om = new ObjectMessenger(socket);
-            
             // creates the Thread to listen from the server
             new ListenFromServer().start();
             //send username data
                 if(check_connect()){
-                    om.sendObject(LOGIN,cg.get_firstname()+";"+cg.get_secondname()+";"
-                            +cg.get_telephone()+";"+cg.get_email());
+                    sendData();
                 }else{
+                    sendedOurData = false;
                     disconnect();return false;
                 }
         }
         catch(IOException ex) {}
         return true; 
+    }
+    protected void sendData(){
+        try {
+            om.sendObject(LOGIN,cg.get_firstname()+";"+cg.get_secondname()+";"
+                    +cg.get_telephone()+";"+cg.get_email());
+            sendedOurData = true;
+        } catch (IOException ex) {
+            Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     protected static boolean check_connect(){return socket.isConnected();}
     protected void close_main_window(){
