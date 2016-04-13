@@ -105,8 +105,7 @@ public class selectedCompany extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-      //ArrayList<Object> calculated = calculate();
-      //log(calculated.toString());
+        showSelectedCompany();
     }//GEN-LAST:event_jButton3MouseClicked
     company calculate(){
        return c.getCalculateCompany();
@@ -124,25 +123,8 @@ public class selectedCompany extends javax.swing.JFrame {
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
       createPDFReport.createReport(false, null, c); // неполный отчет
     }//GEN-LAST:event_jButton4MouseClicked
-
         
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new selectedCompany().setVisible(true);
-            }
-        });
-    }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable sct;
-    // End of variables declaration//GEN-END:variables
-
+    
     void setSelectedCompany(company c) {
         this.c = c;
         showSelectedCompany();
@@ -167,7 +149,25 @@ public class selectedCompany extends javax.swing.JFrame {
             });
         }
     }
+    
     static void log(Object o){
         System.out.println(o);
     }
+    
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new selectedCompany().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable sct;
+    // End of variables declaration//GEN-END:variables
 }

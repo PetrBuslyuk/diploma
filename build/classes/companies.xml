@@ -12,7 +12,7 @@
 	  <reinvesting>true</reinvesting>
 	</i>
 	<i>
-	  <plus>80</plus>
+	  <plus>801</plus>
 	  <minus>0</minus>
 	  <reinvesting>true</reinvesting>
 	</i>
@@ -50,6 +50,11 @@
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
 	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
@@ -60,12 +65,7 @@
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>

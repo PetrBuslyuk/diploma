@@ -112,11 +112,17 @@ class company {
             plus2 = (plus1.get(i).equals(""))? 0: Double.parseDouble(plus1.get(i));
             minus2 = (minus1.get(i).equals(""))? 0:Double.parseDouble(minus1.get(i));
             if(Boolean.parseBoolean(reinvesting1.get(i))){
-                set_depofirst(i,(i==0)?depo1:BigDecimal.valueOf(get_depolast(i-1)+ plus2).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
+                set_depofirst(i,(i==0)?depo1:
+                    ((Boolean.parseBoolean(reinvesting1.get(i-1)))?
+                        BigDecimal.valueOf(get_depolast(i-1)+ plus2).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue():
+                        BigDecimal.valueOf(get_depofirst(i-1)+ plus2).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue()));
                 set_resultbuffer(i,get_depofirst(i)*(persent1/100) - minus2);
                 set_depolast(i,BigDecimal.valueOf(get_resultbuffer(i)+get_depofirst(i)).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
             }else{
-                set_depofirst(i,(i==0)?depo1:BigDecimal.valueOf(get_depofirst(i-1)+ plus2).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
+                set_depofirst(i,(i==0)?depo1:
+                        ((Boolean.parseBoolean(reinvesting1.get(i-1)))?BigDecimal.valueOf(get_depolast(i-1)+ plus2).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue():
+                        BigDecimal.valueOf(get_depofirst(i-1)+ plus2).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue()
+                ));
                 set_resultbuffer(i,get_depofirst(i)*(persent1/100) - minus2);
                 set_depolast(i,BigDecimal.valueOf(get_resultbuffer(i)+get_depofirst(i)+((i==0)?0:get_resultbuffer(i-1))).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
             }

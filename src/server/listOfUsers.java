@@ -72,7 +72,7 @@ private final database db;
         ));
         jScrollPane1.setViewportView(tcl);
 
-        choiseMade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Нет действий", "Обновить список", "Выслать сообщение", "Сохранить", "Выделить всех" }));
+        choiseMade.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Нет действий", "Обновить список", "Выслать сообщение", "Выделить всех" }));
         choiseMade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 choiseMadeActionPerformed(evt);
@@ -126,14 +126,15 @@ private final database db;
                     JOptionPane.showMessageDialog(rootPane,"Сообщения успешно отправлены");
                 }
             }; break;
-            case "Сохранить":{};break;
-            case "Выделить всех":{};break;         
+            case "Выделить всех":{
+                tcl.selectAll();
+            };break;         
             default:break;
         }
     }//GEN-LAST:event_madeActionPerformed
 
     private void choiseMadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_choiseMadeActionPerformed
-        // TODO add your handling code here:
+      
     }//GEN-LAST:event_choiseMadeActionPerformed
 
     void add_new_user(user u){
