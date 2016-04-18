@@ -37,6 +37,9 @@ private static selectedCompany sc;
         separator = new javax.swing.JPopupMenu.Separator();
         add_company = new javax.swing.JMenuItem();
         delete_company = new javax.swing.JMenuItem();
+        separator1 = new javax.swing.JPopupMenu.Separator();
+        saveDataToServer = new javax.swing.JMenuItem();
+        restoreDataFromServer = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
         calculate = new javax.swing.JMenuItem();
         edit_cname = new javax.swing.JMenuItem();
@@ -87,7 +90,7 @@ private static selectedCompany sc;
         companies.setText("Компании");
         companies.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
 
-        generate_report_to_all.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_A, java.awt.event.InputEvent.CTRL_MASK));
+        generate_report_to_all.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         generate_report_to_all.setText("Сформировать отчет");
         generate_report_to_all.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -132,6 +135,25 @@ private static selectedCompany sc;
             }
         });
         companies.add(delete_company);
+        companies.add(separator1);
+
+        saveDataToServer.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        saveDataToServer.setText("Сохранить данные удаленно");
+        saveDataToServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveDataToServerActionPerformed(evt);
+            }
+        });
+        companies.add(saveDataToServer);
+
+        restoreDataFromServer.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.ALT_MASK | java.awt.event.InputEvent.CTRL_MASK));
+        restoreDataFromServer.setText("Восстановить данные с сервера");
+        restoreDataFromServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restoreDataFromServerActionPerformed(evt);
+            }
+        });
+        companies.add(restoreDataFromServer);
 
         menu.add(companies);
 
@@ -207,7 +229,7 @@ private static selectedCompany sc;
 
         menu.add(programm);
 
-        save_companies.setText("Сохранить");
+        save_companies.setText("Сохранить данные локально");
         save_companies.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 save_companies(evt);
@@ -372,6 +394,14 @@ private static selectedCompany sc;
             CompanyList.clear();
         }
     }//GEN-LAST:event_generate_report_to_allActionPerformed
+
+    private void saveDataToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDataToServerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveDataToServerActionPerformed
+
+    private void restoreDataFromServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreDataFromServerActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_restoreDataFromServerActionPerformed
     
     static void log(Object o){
         System.out.println(o);
@@ -545,8 +575,11 @@ private static selectedCompany sc;
     private javax.swing.JMenuBar menu;
     private javax.swing.JMenu profile;
     private javax.swing.JMenu programm;
+    private javax.swing.JMenuItem restoreDataFromServer;
+    private javax.swing.JMenuItem saveDataToServer;
     private javax.swing.JMenu save_companies;
     private javax.swing.JMenuItem select_all_companies;
     private javax.swing.JPopupMenu.Separator separator;
+    private javax.swing.JPopupMenu.Separator separator1;
     // End of variables declaration//GEN-END:variables
 }

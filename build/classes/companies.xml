@@ -14,7 +14,7 @@
 	<i>
 	  <plus>801</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 </intervals>
 </company>
