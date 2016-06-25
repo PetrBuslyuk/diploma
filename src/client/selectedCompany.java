@@ -1,9 +1,10 @@
 package client;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class selectedCompany extends javax.swing.JFrame {
-    company c;
+    static company c;
     public selectedCompany() {
         initComponents();
     }
@@ -15,7 +16,6 @@ public class selectedCompany extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         sct = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
 
@@ -30,9 +30,16 @@ public class selectedCompany extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, true, true, true, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(sct);
@@ -50,8 +57,6 @@ public class selectedCompany extends javax.swing.JFrame {
                 jButton1MouseClicked(evt);
             }
         });
-
-        jButton2.setText("Назад");
 
         jButton3.setText("Расчитать прибыль");
         jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -78,8 +83,7 @@ public class selectedCompany extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 645, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)
@@ -96,7 +100,6 @@ public class selectedCompany extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton3)
-                    .addComponent(jButton2)
                     .addComponent(jButton4))
                 .addContainerGap())
         );
@@ -106,12 +109,18 @@ public class selectedCompany extends javax.swing.JFrame {
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         showSelectedCompany();
+        JOptionPane.showMessageDialog(rootPane, "Общая сумма первоначального вложения \nвместе с прибылью равна "+
+                get_result()
+                );
     }//GEN-LAST:event_jButton3MouseClicked
     company calculate(){
        return c.getCalculateCompany();
     }
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
        //Save company
+       if (!checkTableValues()){
+            return ;
+       }
        for(int i=0;i<sct.getRowCount();i++){
            c.set_plus(i, sct.getValueAt(i, 1).toString()); 
            c.set_minus(i, sct.getValueAt(i, 2).toString());
@@ -119,7 +128,9 @@ public class selectedCompany extends javax.swing.JFrame {
        }
        companies.set_updated_company(c);
     }//GEN-LAST:event_jButton1MouseClicked
-
+    public double get_result(){
+       return c.get_result();
+    }
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
       createPDFReport.createReport(false, null, c); // неполный отчет
     }//GEN-LAST:event_jButton4MouseClicked
@@ -150,6 +161,61 @@ public class selectedCompany extends javax.swing.JFrame {
         }
     }
     
+    protected boolean checkTableValues(){
+        boolean checked = true;
+        for(int i=0;i<sct.getRowCount();i++){
+           String plus = sct.getValueAt(i, 1).toString();
+           String minus = sct.getValueAt(i, 2).toString();
+           double depofirst = Double.parseDouble(sct.getValueAt(i, 4).toString());
+           if (!isDouble(plus)){
+               companies.show("Вы ввели неправильно значение в таблице."
+                       + " Столбец довложений, период:"+ i);
+               return false;
+           }
+           if (Double.parseDouble(plus)>999999999) {
+               companies.show("Вы ввели слишком уж большое число."
+                       + " Столбец довложений, период:"+ i);
+               return false;
+           }
+           if (Double.parseDouble(plus)<0){
+               companies.show("Вложения не могут быть отрицательными."
+                       + "\n Используйте снятие на конец предыдущего месяца."
+                       + " Столбец довложений, период:"+ i);
+               return false;
+           }
+           if (!isDouble(minus)){
+               companies.show("Вы ввели неправильно значение в таблице."
+                       + " Столбец снятий, период:"+ i);
+               return false;
+           }
+           if (Double.parseDouble(minus)<0){
+               companies.show("Снятия не могут быть отрицательными."
+                       + "\n Используйте довложение на начало следующего месяца."
+                       + " Столбец снятий, период:"+ i);
+               return false;
+           }
+          
+           if (Double.parseDouble(minus)>
+                   depofirst +
+                   (depofirst+Double.parseDouble(plus))*Double.parseDouble(c.get_persent())/100){
+               companies.show("Сумма снятия не может быть больше суммы прибыли + депозита на начало месяца."
+                       + " Столбец снятий, период:"+ i);
+               return false;
+           }
+         
+        }
+        return checked;
+    }
+    
+    public static boolean isDouble(String s) {
+        boolean isValidBoolean = false;
+        try{
+           Double.parseDouble(s); 
+           isValidBoolean = true;
+        }catch (NumberFormatException ex){}
+        return isValidBoolean;
+    }
+     
     static void log(Object o){
         System.out.println(o);
     }
@@ -164,7 +230,6 @@ public class selectedCompany extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JScrollPane jScrollPane1;

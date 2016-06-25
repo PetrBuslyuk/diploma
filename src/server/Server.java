@@ -2,32 +2,41 @@ package server;
 
 import java.io.*;
 import java.net.*;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class server {
+public class Server {
     private int uniqueId;
     public ArrayList<ClientThread> al;
-    private static serverForm sg;
+    private static ServerForm sg;
     private static SimpleDateFormat sdf;
     private static boolean keepGoing;
     private static int port;
-    private static listOfUsers lu;
+    private static ListOfUsers lu;
     private ClientThread ct;
     private ServerSocket serverSocket;
-    public server(int port, serverForm sg) {
+    private static Database db;
+    public Server(int port, ServerForm sg) {
+        try {
             this.sg = sg;
             this.port = port;
             sdf = new SimpleDateFormat("HH:mm:ss");
             al = new ArrayList<>();
+            db = new Database();
+        } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException ex) {
+          
+        }
     }
 
-    void set_list_user(listOfUsers lu) {
+    void set_list_user(ListOfUsers lu) {
        this.lu = lu;
     }
 
     public static class ObjectMessenger{
-    protected final static int LOGIN=0,QUIT=1,UPDATE=3,ACCESS=4,FILESNAME=5,FILES=6;
+    protected final static int LOGIN=0,QUIT=1,UPDATE=3,ACCESS=4,SAVE_DATA=5,RESTORE_DATA=6;
     protected static Socket socket;
     protected ObjectOutputStream oos;
     protected ObjectInputStream ois;
@@ -61,17 +70,70 @@ public class server {
                     //ct.close();
                     display("Новый клиент "+ct.get_name()+" "+ct.get_secondname()+" добавился.");}
                     lu.add_new_user(ct.get_user());
+                    //lu.getAllUsers();
+                    lu.refresh_list();
+                    
             };break;
             case QUIT:{
                 lu.set_online(ct.get_email(),false);
                 display("Клиент "+ct.get_name()+" "+ct.get_secondname()+" отключился.");
                 ct.close();
             };break;
+            case SAVE_DATA:{
+                    String email = mes[1];
+                    display("Клиент "+email+" запросил сохранение данных.");
+                    new ServerThreadToSaveData(email).start();
+                    display("Данные сохранены.");
+            };break;
+            case RESTORE_DATA:{
+                   String email = mes[1];
+                   display("Клиент "+email+" запросил восстановление данных.");
+                   new SendDataToClient(email).start();
+                   display("Данные высланы.");
+            };break;
             default:display("Неверное сообщение: "+ str);break;
         }
      }
+    public class SendDataToClient extends Thread {
+        String email = "";
+        SendDataToClient(String e){
+            this.email = e;
+        }
+        @Override
+        public void run(){
+            try {
+                Socket socket1;
+                int portNumber = 1777;
+                String str = "";
+                System.out.println(email);
+                socket1 = new Socket(InetAddress.getLocalHost(), portNumber);
+                
+                ObjectInputStream oisS = new ObjectInputStream(socket1.getInputStream());
+                
+                ObjectOutputStream oosS = new ObjectOutputStream(socket1.getOutputStream());
+                
+                oosS.writeObject(db.getObjectToRestore(email));
+                
+                while ((str = (String) oisS.readObject()) != null) {
+                    System.out.println(str);
+                    oosS.writeObject("bye");
+                    
+                    if (str.equals("bye"))
+                        break;
+                }
+                
+                oisS.close();
+                oosS.close();
+                socket1.close();
+            } catch (IOException | ClassNotFoundException ex) {
+            } catch (Exception ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     }
     
+     
     protected void start() throws Exception {
         if(serverSocket != null) stop();
         keepGoing = true;
@@ -112,18 +174,56 @@ public class server {
             if(ct.id == id) {al.remove(i);return;}
         }
     }
+    static class ServerThreadToSaveData extends Thread{
+        String email="";
+        ServerThreadToSaveData(String e){
+            this.email = e;
+        }
+        public  void run() {
+            try {
+                ServerSocket servSocket;
+                Socket fromClientSocket;
+                int cTosPortNumber = 1777;
+                String str1;
+                client.companiesToSent comp;
 
+                servSocket = new ServerSocket(cTosPortNumber);
+                System.out.println("Waiting for a connection on " + cTosPortNumber);
+
+                fromClientSocket = servSocket.accept();
+
+                ObjectOutputStream oos = new ObjectOutputStream(fromClientSocket.getOutputStream());
+
+                ObjectInputStream ois = new ObjectInputStream(fromClientSocket.getInputStream());
+
+                while ((comp = (client.companiesToSent) ois.readObject()) != null) {
+                    db.insertCompanyData(comp, email);
+                    
+                    oos.writeObject("bye bye");
+                    break;
+                }
+                oos.close();
+                ois.close();
+                fromClientSocket.close();
+                servSocket.close();
+            } catch (IOException | ClassNotFoundException ex) {
+            } catch (SQLException ex) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
     class ClientThread extends Thread {
         // the socket where to listen/talk
         protected Socket socket;
         private int id;
-        protected user user;
+        protected User user;
         private ObjectMessenger om;
         
         ClientThread(Socket socket) throws Exception {
             // a unique id
             id = ++uniqueId;
-            user = new user();
+            user = new User();
             this.socket = socket;
             try{  
                om = new ObjectMessenger(socket);
@@ -166,7 +266,7 @@ public class server {
         String telephone,String email) {
             user.set_login(username,secondname,telephone,email);
         }
-        protected user get_user(){
+        protected User get_user(){
             return user;
         }
     }

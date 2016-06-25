@@ -3,14 +3,23 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Diplom/build/classes/companies.xml</file>
+            <file>file:/C:/Diplom/src/client/clientProfile.java</file>
             <file>file:/C:/Diplom/src/client/company.java</file>
-            <file>file:/C:/Diplom/src/server/serverForm.java</file>
-            <file>file:/C:/Diplom/src/server/server.java</file>
-            <file>file:/C:/Diplom/src/client/companies.java</file>
+            <file>file:/C:/Diplom/src/server/EmailSending.java</file>
+            <file>file:/C:/Diplom/src/server/Database.java</file>
+            <file>file:/C:/Diplom/src/server/ListOfUsers.java</file>
             <file>file:/C:/Diplom/src/client/client.java</file>
+            <file>file:/C:/Diplom/src/client/createPDFReport.java</file>
+            <file>file:/C:/Diplom/src/server/ServerForm.java</file>
             <file>file:/C:/Diplom/src/client/selectedCompany.java</file>
-            <file>file:/C:/Diplom/src/server/listOfUsers.java</file>
+            <file>file:/C:/Diplom/src/server/Server.java</file>
+            <file>file:/C:/Diplom/src/server/User.java</file>
+            <file>file:/C:/Diplom/build/classes/companies.xml</file>
+            <file>file:/C:/Diplom/test/client/companyTest.java</file>
+            <file>file:/C:/Diplom/test/client/companiesTest.java</file>
+            <file>file:/C:/Diplom/src/client/companies.java</file>
+            <file>file:/C:/Diplom/test/client/clientProfileTest.java</file>
+            <file>file:/C:/Diplom/src/client/companiesToSent.java</file>
         </group>
     </open-files>
 </project-private>

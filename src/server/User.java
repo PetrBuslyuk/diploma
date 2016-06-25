@@ -1,14 +1,14 @@
 package server;
 
-public class user {
+public class User {
 private String name,secondname,tel,email;
 private boolean online;
 protected int item_number;
-    user(boolean online,String name, String secondname, String tel, String email) {
+    User(boolean online,String name, String secondname, String tel, String email) {
         this.online = online;this.name = name;
         this.secondname = secondname;this.tel = tel;this.email = email;
     }
-    user() {
+    User() {
        this.online=false;
        this.name=this.secondname=this.tel=this.email="";
     }

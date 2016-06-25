@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <companies>
 <company>
-	<name>MyCompany2</name>
-	<depo>10</depo>
-	<persent>4</persent>
+	<name>fw</name>
+	<depo>10.0</depo>
+	<persent>4.0</persent>
 	<period>2</period>
 	<intervals>
 	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
+	  <plus>0.0</plus>
+	  <minus>0.0</minus>
 	  <reinvesting>true</reinvesting>
 	</i>
 	<i>
-	  <plus>801</plus>
+	  <plus>801.01</plus>
 	  <minus>0</minus>
 	  <reinvesting>false</reinvesting>
 	</i>
@@ -20,8 +20,89 @@
 </company>
 <company>
 	<name>dwwd</name>
-	<depo>432</depo>
-	<persent>423</persent>
+	<depo>432.0</depo>
+	<persent>423.0</persent>
+	<period>1</period>
+	<intervals>
+	<i>
+	  <plus>0.1</plus>
+	  <minus>0.0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+</intervals>
+</company>
+<company>
+	<name>Forex</name>
+	<depo>100.0</depo>
+	<persent>30.0</persent>
+	<period>12</period>
+	<intervals>
+	<i>
+	  <plus>0.0</plus>
+	  <minus>0.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>100.0</plus>
+	  <minus>0.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0.0</plus>
+	  <minus>50.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0.0</plus>
+	  <minus>0.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0.0</plus>
+	  <minus>200</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0.0</plus>
+	  <minus>0.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>5000.0</plus>
+	  <minus>0.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0.0</plus>
+	  <minus>0.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>1000.0</plus>
+	  <minus>0.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0.0</plus>
+	  <minus>0.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0.0</plus>
+	  <minus>400.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+	<i>
+	  <plus>0.0</plus>
+	  <minus>0.0</minus>
+	  <reinvesting>true</reinvesting>
+	</i>
+</intervals>
+</company>
+<company>
+	<name>100</name>
+	<depo>1999</depo>
+	<persent>2</persent>
 	<period>1</period>
 	<intervals>
 	<i>
@@ -32,66 +113,11 @@
 </intervals>
 </company>
 <company>
-	<name>Forex</name>
-	<depo>100</depo>
-	<persent>25</persent>
-	<period>12</period>
+	<name>fdwui</name>
+	<depo>234</depo>
+	<persent>42</persent>
+	<period>1</period>
 	<intervals>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>false</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>false</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>false</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
-	</i>
-	<i>
-	  <plus>0</plus>
-	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
-	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
@@ -100,65 +126,148 @@
 </intervals>
 </company>
 <company>
-	<name>test</name>
-	<depo>100</depo>
-	<persent>30</persent>
-	<period>12</period>
+	<name>wd</name>
+	<depo>432</depo>
+	<persent>3</persent>
+	<period>23</period>
 	<intervals>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>042</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>
 	  <minus>0</minus>
-	  <reinvesting>true</reinvesting>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+</intervals>
+</company>
+<company>
+	<name>42</name>
+	<depo>42</depo>
+	<persent>34</persent>
+	<period>4</period>
+	<intervals>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
+	</i>
+	<i>
+	  <plus>0</plus>
+	  <minus>0</minus>
+	  <reinvesting>false</reinvesting>
 	</i>
 	<i>
 	  <plus>0</plus>

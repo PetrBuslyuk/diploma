@@ -1,18 +1,12 @@
 package client;
 import java.io.FileOutputStream;
-import java.util.Date;
-
-import com.itextpdf.text.Anchor;
 import com.itextpdf.text.BadElementException;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chapter;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Section;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -33,6 +27,9 @@ public class createPDFReport {
   public static void createReport(boolean typeOfReport, ArrayList<company> Companies, company Company) {
     try {
         namePDFReport = companies.input("Введите название отчета", "Введите название отчета");
+        if (namePDFReport==null){
+            return ;
+        }
         FILE  = companies.get_current_dir()+namePDFReport+".pdf";
         Document document = new Document();
         PdfWriter.getInstance(document, new FileOutputStream(FILE));

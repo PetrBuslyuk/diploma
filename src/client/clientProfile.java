@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import java.util.regex.Pattern;
 
 public class clientProfile extends javax.swing.JFrame {
     private boolean connected;
@@ -36,7 +37,7 @@ public class clientProfile extends javax.swing.JFrame {
                     try { in.close(); } catch (IOException ex) {}
                 }
             } else  check_and_send();
-            c = new client("localhost", 7777, this);
+            c = new client("localhost", 7777, this, email);
             timer1 = new Timer();
             timer1.schedule(new TimerTask(){
                 public void run(){
@@ -60,8 +61,12 @@ public class clientProfile extends javax.swing.JFrame {
                     }
                 }
             }, 0L ,1000L);
-        } catch (Exception ex) {}
+        } catch (Exception ex){
+            companies.log(ex);
+        }
     }
+    
+    
     protected void fill_client_all(String firstname,String secondname,
             String telephone,String email) throws Exception{
             this.firstname=firstname;
@@ -76,7 +81,18 @@ public class clientProfile extends javax.swing.JFrame {
             return false;
         }else{return true;}
     }
+
+    protected boolean checkEmail(String em){
+        return Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
+        "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$").matcher(em).matches();
+    }
+    
     protected void check_and_send(){
+        if(!checkEmail(em.getText())){
+            companies.show("Неправильный емейл");
+            return ;
+        }
+        
         if(check(fn,"имени") && check(sn,"фамилии") && check(tn,"телефона") && check(em,"емейла")){
             try {
                 connected=true;
@@ -86,6 +102,7 @@ public class clientProfile extends javax.swing.JFrame {
             } catch (IOException ex) {}
         }else  connected=false;
     }
+    
     protected static void write(File file, String text) {
     try {
         if(!file.exists()){file.createNewFile();}
@@ -218,5 +235,13 @@ public class clientProfile extends javax.swing.JFrame {
 
     void set_comp(companies comp) {
         this.comp = comp;
+    }
+
+    void sendDataToServer() {
+        c.sendDataToServer();
+    }
+    
+    void restoreData() {
+        c.restoreDataFromServer();
     }
 }

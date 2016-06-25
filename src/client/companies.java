@@ -1,17 +1,23 @@
 package client;
 
+import java.awt.Window;
 import javax.swing.JOptionPane;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-public class companies extends javax.swing.JFrame {
+public class companies extends javax.swing.JFrame implements Serializable{
 private static clientProfile c1;
 private static ArrayList<company> companys=new ArrayList<>();
 private static File file= new File(get_current_dir()+"companies.xml");
@@ -33,7 +39,6 @@ private static selectedCompany sc;
         companies = new javax.swing.JMenu();
         generate_report_to_all = new javax.swing.JMenuItem();
         select_all_companies = new javax.swing.JMenuItem();
-        calculate_selected = new javax.swing.JMenuItem();
         separator = new javax.swing.JPopupMenu.Separator();
         add_company = new javax.swing.JMenuItem();
         delete_company = new javax.swing.JMenuItem();
@@ -107,15 +112,6 @@ private static selectedCompany sc;
             }
         });
         companies.add(select_all_companies);
-
-        calculate_selected.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_MASK));
-        calculate_selected.setText("Расчитать выбранные");
-        calculate_selected.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                calculate_selectedMouseClicked(evt);
-            }
-        });
-        companies.add(calculate_selected);
         companies.add(separator);
 
         add_company.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
@@ -275,23 +271,102 @@ private static selectedCompany sc;
        int[] sr = ct.getSelectedRows();
        String [] cs = calculate_selected(sr);
        JOptionPane.showMessageDialog(null, "Были выбраны следующие компании:\n"
-           +cs[0]+BigDecimal.valueOf(Double.parseDouble(cs[1])).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
+            +cs[0]+ //Вывод компаний
+            "Перспективная прибыль составила:"
+            +BigDecimal.valueOf(Double.parseDouble(cs[1]))
+                    .setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue());
        }
     }//GEN-LAST:event_calculateActionPerformed
 
     private void add_companyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_companyActionPerformed
         DefaultTableModel model = (DefaultTableModel)ct.getModel();
-        String name = JOptionPane.showInputDialog("Введите название");
-        String depo = JOptionPane.showInputDialog("Введите депозит");
-        String persent = JOptionPane.showInputDialog("Введите средний процент");
-        String period = JOptionPane.showInputDialog("Введите длительность инвестирования");
+        String name = input("Название компании","Введите название");
+        if (name==null){
+            return ;
+        }
+        for (company compName: companys){
+            if (compName.get_name().equals(name)){
+                show("Такая компания уже существует");
+                return ;
+            }
+        }
+        if (name.isEmpty()){
+            show("Вы не ввели название компании");
+            return ;
+        }
+        String depo = input("Депозит","Введите депозит");
+        if (depo==null){
+            return ;
+        }
+        if (!isDouble(depo)){
+            show("Вы ввели некорректный депозит");
+            return ;
+        }
+        if (Double.parseDouble(depo)<=0){
+            show("Начальный депозит не может быть меньше или равен нулю");
+            return ;
+        }
+        String persent = input("Процент","Введите средний процент");
+        if (persent==null){
+            return ;
+        }
+        if (!isDouble(persent)){
+            show("Вы ввели некорректный процент");
+            return ;
+        }
+        if (Double.parseDouble(persent)<=0){
+            show("Процент не может быть отрицательным или равен нулю");
+            return ;
+        }
+        String period = input("Длительность","Введите длительность инвестирования");
+         if (period==null){
+            return ;
+        }
+        if (!isInteger(period)){
+            show("Вы ввели некорректный период");
+            return ;
+        }
+        if (Double.parseDouble(period)==0){
+            show("Период инвестирования не может быть равен 0");
+            return ;
+        }
+        if (Double.parseDouble(period)<0){
+            show("Период инвестирования не может принимать отрицательное значение");
+            return ;
+        }
+        if (Integer.parseInt(period) % 1 != 0) {
+            show("Период инвестирования должен содержать целые числа");
+            return ;
+        }
         company c = new company(name,depo,persent,period,
                new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
         companys.add(c);
         save_companies();
+    try {
+        get_companies();
+    } catch (ParserConfigurationException | SAXException | IOException ex) {
+        Logger.getLogger(companies.class.getName()).log(Level.SEVERE, null, ex);
+    }
         show_companies();
     }//GEN-LAST:event_add_companyActionPerformed
 
+    public static boolean isInteger(String s) {
+        boolean isValidInteger = false;
+        try{
+           Integer.parseInt(s); 
+           isValidInteger = true;
+        }catch (NumberFormatException ex){}
+        return isValidInteger;
+    }
+     public static boolean isDouble(String s) {
+        boolean isValidBoolean = false;
+        try{
+           Double.parseDouble(s); 
+           isValidBoolean = true;
+        }catch (NumberFormatException ex){}
+        return isValidBoolean;
+    }
+    
     private void delete_companyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_companyActionPerformed
         deleteCompanies();
     }//GEN-LAST:event_delete_companyActionPerformed
@@ -317,16 +392,21 @@ private static selectedCompany sc;
          save_companies();
     }//GEN-LAST:event_save_companies
 
-    private void calculate_selectedMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_calculate_selectedMouseClicked
-        int[] sr = ct.getSelectedRows();
-        calculate_selected(sr);
-    }//GEN-LAST:event_calculate_selectedMouseClicked
-
     private void edit_cnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edit_cnameActionPerformed
         switch (ct.getSelectedRowCount()) {
             case 0:show("Выберите компанию"); break;
             case 1:
-                String new_cname = input("Изменение названия комании","Введите новое название компании");
+                String new_cname = input("Изменение названия компании","Введите новое название компании");
+                for (company compName: companys){
+                    if (compName.get_name().equals(new_cname)){
+                        show("Такая компания уже существует");
+                        return ;
+                    }
+                }
+                if (new_cname.isEmpty()){
+                    show("Вы не ввели название компании");
+                    return ;
+                }
                 companys.get(ct.getSelectedRow()).set_name(new_cname);
                 show_companies();
                 save_companies();
@@ -340,6 +420,14 @@ private static selectedCompany sc;
             case 0:show("Выберите компанию"); break;
             case 1:
                 String new_cdepo = input("Изменение депозита","Введите новый начальный депозит");
+                if (!isDouble(new_cdepo)){
+                    show("Вы ввели некорректный депозит");
+                    return ;
+                }
+                if (Double.parseDouble(new_cdepo)<=0){
+                    show("Начальный депозит не может быть меньше или равен нулю");
+                    return ;
+                }
                 companys.get(ct.getSelectedRow()).set_depo(new_cdepo);
                 show_companies();
                 save_companies();
@@ -353,6 +441,14 @@ private static selectedCompany sc;
             case 0:show("Выберите компанию"); break;
             case 1:
                 String new_cpersent = input("Изменение процента","Введите средний процент");
+                if (!isDouble(new_cpersent)){
+                    show("Вы ввели некорректный процент");
+                    return ;
+                }
+                if (Double.parseDouble(new_cpersent)<=0){
+                    show("Процент не может быть отрицательным или равен нулю");
+                    return ;
+                }
                 companys.get(ct.getSelectedRow()).set_persent(new_cpersent);
                 save_companies();
                 try {
@@ -370,6 +466,22 @@ private static selectedCompany sc;
             case 0:show("Выберите компанию"); break;
             case 1:
                 String new_cperiod = input("Изменение периода","Введите период инвестирования");
+                if (!isInteger(new_cperiod)){
+                    show("Вы ввели некорректный период");
+                    return ;
+                }
+                if (Double.parseDouble(new_cperiod)==0){
+                    show("Период инвестирования не может быть равен 0");
+                    return ;
+                }
+                if (Double.parseDouble(new_cperiod)<0){
+                    show("Период инвестирования не может принимать отрицательное значение");
+                    return ;
+                }
+                if (Integer.parseInt(new_cperiod) % 1 != 0) {
+                    show("Период инвестирования должен содержать целые числа");
+                    return ;
+                }
                 companys.get(ct.getSelectedRow()).set_period(new_cperiod);
                 show_companies();
                 save_companies();
@@ -397,10 +509,12 @@ private static selectedCompany sc;
 
     private void saveDataToServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDataToServerActionPerformed
         // TODO add your handling code here:
+        c1.sendDataToServer();        
     }//GEN-LAST:event_saveDataToServerActionPerformed
 
     private void restoreDataFromServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restoreDataFromServerActionPerformed
         // TODO add your handling code here:
+        c1.restoreData();
     }//GEN-LAST:event_restoreDataFromServerActionPerformed
     
     static void log(Object o){
@@ -420,8 +534,8 @@ private static selectedCompany sc;
            int period = Integer.parseInt(ct.getValueAt(sr[i], 3).toString());
            String ct_new =ct.getValueAt(sr[i], 0).toString();
            showSelectedCompany(ct_new);
-           depo += sc.calculate().get_depolast(period-1);
-           companies_table += ct_new+"\n";
+           depo += sc.calculate().get_result();
+           companies_table += ct_new+"\n"; // Аппендим компании
         }
         return new String [] {companies_table,Double.toString(depo)};
     }
@@ -541,7 +655,7 @@ private static selectedCompany sc;
                 comp = new companies();
                 comp.setVisible(true);
             } catch (Exception ex) {
-                log(ex); 
+               
             }
         });
         try{
@@ -554,14 +668,25 @@ private static selectedCompany sc;
             int [] i=new int[companys.size()];int a=0;
             for(company c:companys){i[a]=a++;}
             calculate_selected(i);
-        }catch(Exception ex){log(ex);}
+        }catch(Exception ex){}
     }
-
+    protected static ArrayList<company> getCompaniesToObject(){
+        return companys;
+    }
+    
+    protected static void setCompanies(companiesToSent v){
+        companys.clear();
+        Iterator i = v.getCampanyIterator();
+        while(i.hasNext()){
+            company c = (company) i.next();
+            companys.add(c);
+        }
+        show_companies();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem about_programm;
     private javax.swing.JMenuItem add_company;
     private javax.swing.JMenuItem calculate;
-    private javax.swing.JMenuItem calculate_selected;
     private javax.swing.JMenu companies;
     private static javax.swing.JTable ct;
     private javax.swing.JMenuItem delete_company;

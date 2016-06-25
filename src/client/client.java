@@ -3,23 +3,26 @@ import java.net.*;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 
-public class client{
+public class client {
     public static Socket socket;
     private static clientProfile cg;
     private static companies comp;
-    public ObjectMessenger om;
+    public static ObjectMessenger om;
     private String server="localhost";
-    protected final static int LOGIN=0,QUIT=1;
+    private static String email;
+    protected final static int LOGIN=0,QUIT=1,SAVE_DATA=5,RESTORE_DATA=6;
     private final int port;
     private static boolean access=true;
     static boolean sendedOurData=false;
         
-    client(String server,int port,clientProfile cg){
+    client(String server,int port,clientProfile cg, String e){
         this.server = server;
         this.port = port;
         this.cg = cg;
+        this.email = e;
     }
     void set_comp(companies comp){
        this.comp = comp;
@@ -51,10 +54,9 @@ public class client{
             om.sendObject(LOGIN,cg.get_firstname()+";"+cg.get_secondname()+";"
                     +cg.get_telephone()+";"+cg.get_email());
             sendedOurData = true;
-        } catch (IOException ex) {
-            Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (IOException ex) {}
     }
+    
     protected static boolean check_connect(){return socket.isConnected();}
     protected void close_main_window(){
         if(socket != null){
@@ -63,6 +65,14 @@ public class client{
             } catch (IOException ex) {}
         }
         System.exit(0);
+    }
+
+    void sendDataToServer() {
+        new SendDataToServer().start();
+    }
+    
+    void restoreDataFromServer() {
+        new ClientThreadSaveData().start();
     }
     
     public static class ObjectMessenger{
@@ -91,7 +101,53 @@ public class client{
                 case QUIT:{
                     disconnect();
                 }
+                case RESTORE_DATA:{
+                    new ClientThreadSaveData().start();
+                }
                 break;
+            }
+        }
+    }
+    static class ClientThreadSaveData extends Thread{
+        public  void run() {
+            try {
+                if (socket==null){
+                    JOptionPane.showMessageDialog(null, "Cоединение с сервером закрыто. \nПерезайдите в программу.");
+                    return ;
+                }else{
+                    if (!socket.isBound()){
+                        companies.log("few1");
+                         JOptionPane.showMessageDialog(null, "Cоединение с сервером закрыто. \nПерезайдите в программу.");
+                         return ;
+                    }else{
+                        companies.log("few");
+                    }                   
+                }
+                ServerSocket servSocket;
+                Socket fromClientSocket;
+                int cTosPortNumber = 1777;
+                String str1;
+                companiesToSent comp;
+                servSocket = new ServerSocket(cTosPortNumber);
+                om.sendObject(RESTORE_DATA,email);
+                System.out.println("Waiting for a connection on " + cTosPortNumber);
+                
+                fromClientSocket = servSocket.accept();
+                
+                ObjectOutputStream oos = new ObjectOutputStream(fromClientSocket.getOutputStream());
+
+                ObjectInputStream ois = new ObjectInputStream(fromClientSocket.getInputStream());
+
+                while ((comp = (companiesToSent) ois.readObject()) != null) {
+                    companies.setCompanies(comp);
+                    oos.writeObject("bye bye");
+                    break;
+                }
+                oos.close();
+                ois.close();
+                fromClientSocket.close();
+                servSocket.close();
+            } catch (IOException | ClassNotFoundException ex) {
             }
         }
     }
@@ -102,6 +158,7 @@ public class client{
     public class ListenFromServer extends Thread {
         @Override
         public void run(){
+             
             while(true){
                 try{
                     String msg = om.receiveObject();
@@ -110,8 +167,52 @@ public class client{
                 }catch(IOException e){
                     try {
                         disconnect(); break;
-                    } catch (IOException ex) {}
-                } catch (ClassNotFoundException ex) {}
+                    } catch (IOException ex) {
+                    
+                    }
+                } catch (ClassNotFoundException ex) {
+                
+                }
+            }
+        }
+    }
+    
+    public class SendDataToServer extends Thread {
+        @Override
+        public void run(){
+            try {
+                if (socket==null){
+                    JOptionPane.showMessageDialog(null, "Cоединение с сервером закрыто. \nСохраните данные локально.");
+                    return ;
+                }
+                om.sendObject(SAVE_DATA,email);
+                Socket socket1;
+                int portNumber = 1777;
+                String str = "";
+                
+                socket1 = new Socket(InetAddress.getLocalHost(), portNumber);
+                
+                ObjectInputStream ois = new ObjectInputStream(socket1.getInputStream());
+                
+                ObjectOutputStream oos = new ObjectOutputStream(socket1.getOutputStream());
+                
+                companiesToSent companiesSent = new companiesToSent();
+                companiesSent.setCompanies(companies.getCompaniesToObject());
+                
+                oos.writeObject(companiesSent);
+                
+                while ((str = (String) ois.readObject()) != null) {
+                    System.out.println(str);
+                    oos.writeObject("bye");
+                    
+                    if (str.equals("bye"))
+                        break;
+                }
+                
+                ois.close();
+                oos.close();
+                socket1.close();
+            } catch (IOException | ClassNotFoundException ex) {
             }
         }
     }
